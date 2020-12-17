@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+      ul
+      each product in productList
+        if product.isForSale
+          li= `Product Name: ${product.name}, Price: ${product.price}`
+          img(src=`data:image/jpeg;base64,  ${product.picture}`)
+          a(class='button', href='/products/'+product._id) Detail
+          a(class='button', href=`/products/${product._id}/update`) Update
+
+       
+          

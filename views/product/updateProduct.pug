@@ -1,0 +1,38 @@
+extends ../layout
+
+block content
+    p=product._id
+
+    form(action=`/product/${product._id}/update` enctype='multipart/form-data' method='post')
+     div.form-group
+      label(for='seller') Seller:
+      input#title.form-control(type='text', placeholder='seller' name='seller' required='true' value=(undefined===product ? '' : product.seller) )
+     div.form-group
+      label(for='name') name:
+      input#title.form-control(type='text', placeholder='name' name='name' required='true' value=(undefined===product ? '' : product.name) )
+     div.form-group
+      label(for='price') price:
+      input#title.form-control(type='number', placeholder='price' name='price' required='true' value=(undefined===product ? '' : product.price) )
+     div.form-group
+      label(for='quantity') quantity:
+      input#title.form-control(type='number', placeholder='quantity' name='quantity' required='true' value=(undefined===product ? '' : product.quantity) )
+     div.form-group
+      label(for='picture') picture:
+      input#title.form-control(type='file', placeholder='picture' name='picture' required='true' value = product.picture)
+     div.form-group
+      label(for='isForSale') For Sale ? :
+      span yes
+      input#title.form-control(type='checkbox', name='isForSale'  checkd = (undefined === product ? '' : product.isForSale))
+      span no
+      input#title.form-control(type='checkbox', name='isForSale'  checkd = (undefined === product ? '' : product.isForSale))
+       
+     div.form-group
+      label(for='submit') submit:
+      input#title.form-control(type='submit' value='sumit')
+
+     img(src='data:image/jpeg;base64, ' + product.picture)
+     if error
+        ul
+        each err in error
+            li= err.message
+        

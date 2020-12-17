@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+    form(action='/member/login' enctype='multipart/form-data' method='post')
+     div.form-group
+      label(for='email') Email:
+      input#title.form-control(type='text', placeholder='email' name='email' required='true' maxlength=30)
+     div.form-group
+      label(for='password') Password:
+      input#title.form-control(type='password', placeholder='password' name='password' required='true' maxlength=30)
+     div.form-group
+      label(for='repeat password') Repeat password:
+      input#title.form-control(type='password', placeholder='repeat password' name='repeat password' required='true' maxlength=30)
+     div.form-group
+      label(for='submit') submit:
+      input#title.form-control(type='submit' value='sumit') 
+
+    if error
+     ul
+     each err in error
+      li = err  
