@@ -2,7 +2,6 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-// const bodyParser = require('body-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb+srv://Samuel:whymentionhim321@cluster0.nfmyh.mongodb.net/SamNodeJsProject?retryWrites=true&w=majority';

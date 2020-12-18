@@ -33,5 +33,31 @@ const ProductSchema = new Schema({
 });
 
 const Product = mongoose.model('Product', ProductSchema);
+exports.queryAll = () => {
+    return new Promise((resolve, reject) => {
+        Product.find((err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        })
+    })
+}
+exports.queryOne = id => {
+    return new Promise((resolve, reject) => {
+        Product.findById(id, (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        })
+    })
+}
 
-module.exports = Product;
+exports.createOne = data => Product.create(data);
+    
+exports.updateOne = (id, data) => {
+    return new Promise((resolve, reject) => {
+        Product.findByIdAndUpdate(id, { $set: data }, { new: true, lean: true }, (err, r) => {
+            if (err) reject(err);
+            resolve(r);
+        });
+    })
+}
+// module.exports = Product;

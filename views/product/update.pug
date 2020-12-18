@@ -18,7 +18,7 @@ block content
       input#title.form-control(type='number', placeholder='quantity' name='quantity' required='true' value=(undefined===product ? '' : product.quantity) )
      div.form-group
       label(for='picture') picture:
-      input#title.form-control(type='file', placeholder='picture' name='picture' required='true' value = product.picture)
+      input#title.form-control(type='file' name='picture' required='true')
      div.form-group
       label(for='isForSale') For Sale ? :
       span yes

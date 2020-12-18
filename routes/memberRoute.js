@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const MemberController = require('../controllers/memberController');
-memberController = new MemberController();
+const memberController = require('../controllers/memberController');
+
 
 // router.get('/member/login', memberController.get_login_page);
 // router.get('/member/register', memberController.get_register_page);

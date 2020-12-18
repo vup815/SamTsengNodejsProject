@@ -1,17 +1,11 @@
 const mysql = require('mysql');
-const debug = require('debug');
-const connection = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE
+const config = require('config');
+const pool = mysql.createPool({
+    connectionLimit : 10,
+    host: config.get('host'),
+    user: config.get('user'),
+    password: config.get('password'),
+    database: config.get('database')
 });
 
-connection.connect(err => {
-    if (err) {
-        debug.debug(err.message);
-    }
-    console.log('mysql connect success');
-});
-
-module.exports = connection;
+module.exports = pool;

@@ -4,7 +4,7 @@ block content
   h1= title
   p Welcome to #{title}
       ul
-      each product in productList
+      each product in products
         if product.isForSale
           li= `Product Name: ${product.name}, Price: ${product.price}`
           img(src=`data:image/jpeg;base64,  ${product.picture}`)
