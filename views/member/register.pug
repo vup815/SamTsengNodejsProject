@@ -6,13 +6,21 @@ block content
       label(for='email') Email:
       input#title.form-control(type='text', placeholder='email' name='email' required='true' )
      div.form-group
+      label(for='name') Name:
+      input#title.form-control(type='text', placeholder='name' name='name' required='true' )
+     div.form-group
       label(for='password') Password:
       input#title.form-control(type='password', placeholder='password' name='password' required='true')
+     div.form-group
+      label(for='r_password') Repeat Password:
+      input#title.form-control(type='password', placeholder='password' name='r_password' required='true')
      div.form-group
       label(for='submit') submit:
       input#title.form-control(type='submit' value='sumit') 
     
     if error
-     ul
-     each err in error
-      li = err
+      ul
+      each err in error
+       li= err.message
+
+    

@@ -1,10 +1,11 @@
-var express = require('express');
-var router = express.Router();
+exports.index = function(req, res) {
+    if (req.session.view) {
+        req.session.view ++;
+        res.send(`View times : ${req.session.view}`);
+    } else {
+      req.session.view = 1;
+      res.send('Welcome');
+    }
+}
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('example', { title: 'Express' });
-  // res.redirect('example');
-});
 
-module.exports = router;

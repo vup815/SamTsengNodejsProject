@@ -7,7 +7,7 @@ exports.validateId = (id) => {
     return idSchema.validate(id);
 }
 exports.validateMember = (member) => {
-    return memberSchema.validate(member);
+    return memberSchema.validate(member, { abortEarly: false });
 }
 
 

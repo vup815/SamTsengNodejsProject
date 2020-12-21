@@ -1,16 +1,20 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const redis = require('redis');
+
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb+srv://Samuel:whymentionhim321@cluster0.nfmyh.mongodb.net/SamNodeJsProject?retryWrites=true&w=majority';
-
+const session = require('express-session');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const memberRouter = require('.//routes/memberRoute');
 const productRouter = require('./routes/productRoute');
 const app = express();
+
+const RedisStore = require('connect-redis')(session);
+const redisClient = redis.createClient();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,11 +23,16 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+// app.use(cookieParser());
 // app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  store: new RedisStore({client: redisClient}),
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+}));
 
-app.use('/', indexRouter);
 app.use('/', productRouter);
 app.use('/', memberRouter)
 app.use('/users', usersRouter);

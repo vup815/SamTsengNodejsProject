@@ -18,7 +18,11 @@ exports.onTime = () => {
 }
 
 
-exports.toBase64 = (file) => {
-    const picture = fs.readFileSync(file.path);
-    return picture.toString('base64');
+exports.toBase64 = function(path) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(path, 'base64', (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        });
+    });
 }

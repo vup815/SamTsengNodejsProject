@@ -23,6 +23,11 @@ exports.getOne = async function (req, res) {
     Product.queryOne(id)
         .then(r => {
             if (!r) return res.status(404).send('Product not found !');
+            if (req.session.user) {
+                console.log('User exist');
+            } else {
+                console.log('Not exist');
+            }
             res.render('product/detail', { product: r });
         })
         .catch(err => {
@@ -49,10 +54,14 @@ exports.getOneForUpdate = async function (req, res) {
 
 exports.createOne = function (req, res) {
     const form = formidable();
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, async (err, fields, files) => {
         if (err) throw err;
         const { error } = validation.validateProduct(fields);
-        fields.picture = myUtil.toBase64(files.picture);
+        try {
+            fields.picture = await myUtil.toBase64(files.picture);
+        } catch (e) {
+            debug.debug(e.message);
+        }
         if (error) {
             res.render('product/create', { product: fields, error: error.details });
             return;
@@ -72,10 +81,14 @@ exports.createOne = function (req, res) {
 exports.updateOne = function (req, res) {
     const form = formidable();
     const { id } = req.params;
-    form.parse(req, (err, fields, files) => {
+    form.parse(req, async (err, fields, files) => {
         if (err) throw err;
         const { error } = validation.validateProduct(fields);
-        fields.picture = myUtil.toBase64(files.picture);
+        try {
+            fields.picture = await myUtil.toBase64(files.picture);
+        } catch (e) {
+            debug.debug(e.message);
+        }
         if (error) {
             fields._id = id;
             res.render('product/update', { product: fields, error: error.details });
