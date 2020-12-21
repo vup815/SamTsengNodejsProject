@@ -4,10 +4,10 @@ const router = express.Router();
 const memberController = require('../controllers/memberController');
 
 
-router.get('/member/login', memberController.getLogin);
-router.get('/member/register', memberController.getRegister);
-router.post('/member/login', memberController.postLogin);
-router.post('/member/register', memberController.postRegister);
+router.get('/login', memberController.getLogin);
+router.get('/register', memberController.getRegister);
+router.post('/login', memberController.postLogin);
+router.post('/register', memberController.postRegister);
 
 
 

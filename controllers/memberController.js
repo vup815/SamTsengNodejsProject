@@ -10,18 +10,20 @@ const productController = require('../controllers/productController');
 
 exports.postLogin = async function (req, res) {
     const form = formidable();
-    let data = {};
 
     form.parse(req, (err, fields) => {
         if (err) throw err;
         const { error } = validation.validateMember(fields);
         if (error) return res.render('member/login', {error: error.details});
-        data = fields;
-        Member.queryOne(data.email)
+        Member.queryOne(fields.email)
             .then(r => {
+                const member = r[0];
                 if (r.length === 0) return res.render('member/login', { error: { err: { message: 'This account doesn\'t exist' } } });
-                if (r[0].password !== data.password) return res.render('member/login', { error: { err: { message: 'Wrong password' } } });
-                req.session.user = {name: data.name};
+                if (member.password !== fields.password) return res.render('member/login', { error: { err: { message: 'Wrong password' } } });
+                req.session.user = {
+                    name: member.name,
+                    id: member.id
+                };
                 productController.getAll(req, res);
             }, err => {
                 return console.log(err);

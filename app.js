@@ -5,12 +5,11 @@ const logger = require('morgan');
 const redis = require('redis');
 
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb+srv://Samuel:whymentionhim321@cluster0.nfmyh.mongodb.net/SamNodeJsProject?retryWrites=true&w=majority';
+const mongoDB = 'mongodb://localhost/nodeJsProject_shopping';
 const session = require('express-session');
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const memberRouter = require('.//routes/memberRoute');
+const memberRouter = require('./routes/memberRoute');
 const productRouter = require('./routes/productRoute');
+const cartRouter = require('./routes/cartRoute');
 const app = express();
 
 const RedisStore = require('connect-redis')(session);
@@ -23,8 +22,7 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(cookieParser());
-// app.use(bodyParser.urlencoded());
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   store: new RedisStore({client: redisClient}),
@@ -33,10 +31,9 @@ app.use(session({
   saveUninitialized: true
 }));
 
-app.use('/', productRouter);
-app.use('/', memberRouter)
-app.use('/users', usersRouter);
-
+app.use('/products', productRouter);
+app.use('/members', memberRouter)
+app.use('/carts', cartRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

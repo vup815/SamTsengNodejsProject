@@ -3,10 +3,7 @@ extends ../layout
 block content
     p=product._id
 
-    form(action=`/product/${product._id}/update` enctype='multipart/form-data' method='post')
-     div.form-group
-      label(for='seller') Seller:
-      input#title.form-control(type='text', placeholder='seller' name='seller' required='true' value=(undefined===product ? '' : product.seller) )
+    form(action=`/products/update/${product._id}` enctype='multipart/form-data' method='post')
      div.form-group
       label(for='name') name:
       input#title.form-control(type='text', placeholder='name' name='name' required='true' value=(undefined===product ? '' : product.name) )
@@ -18,19 +15,19 @@ block content
       input#title.form-control(type='number', placeholder='quantity' name='quantity' required='true' value=(undefined===product ? '' : product.quantity) )
      div.form-group
       label(for='picture') picture:
-      input#title.form-control(type='file' name='picture' required='true')
+      input#title.form-control(type='file' name='picture')
      div.form-group
       label(for='isForSale') For Sale ? :
       span yes
       input#title.form-control(type='checkbox', name='isForSale'  checkd = (undefined === product ? '' : product.isForSale))
       span no
       input#title.form-control(type='checkbox', name='isForSale'  checkd = (undefined === product ? '' : product.isForSale))
-       
      div.form-group
       label(for='submit') submit:
       input#title.form-control(type='submit' value='sumit')
 
-     img(src='data:image/jpeg;base64, ' + product.picture)
+     if product.picture   
+        img(src='data:image/jpeg;base64, ' + product.picture)
      if error
         ul
         each err in error

@@ -6,10 +6,14 @@ block content
       ul
       each product in products
         if product.isForSale
-          li= `Product Name: ${product.name}, Price: ${product.price}`
+          li= `Product Name: ${product.name}, Price: ${product.price} Quantity: ${product.quantity}`
           img(src=`data:image/jpeg;base64,  ${product.picture}`)
-          a(class='button', href='/products/'+product._id) Detail
-          a(class='button', href=`/products/${product._id}/update`) Update
+          p
+          a(class='button', href=`/products/${product._id}?update=0`) Detail || 
+          
+          a(class='button', href=`/products/${product._id}?update=1`) Update
+          p
+          a(class='button', href=`/carts/add/${product._id}`) Add to cart
 
        
-          
+  a(class='button' href='/products/new/page') create new product

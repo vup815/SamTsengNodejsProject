@@ -13,7 +13,6 @@ exports.validateMember = (member) => {
 
 
 const productSchema = Joi.object({
-    seller: Joi.string().min(3).max(30).alphanum().required(),
     name: Joi.string().min(3).max(30).alphanum().required(),
     price: Joi.number().min(1).max(99999).required(),
     quantity: Joi.number().min(1).max(999).required()

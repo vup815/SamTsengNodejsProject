@@ -27,7 +27,6 @@ exports.queryOne = (email) => {
                     return;
                 }
                 resolve(result);
-                console.log(result);
             });
         });
     });

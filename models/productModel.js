@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ProductSchema = new Schema({
-    seller: {
-        // type: Schema.Types.ObjectId,
-        // ref: 'Member'
-        type: String
-    },
     name: {
         type: String,
         required: true,
@@ -31,7 +26,7 @@ const ProductSchema = new Schema({
     picture:String,
     isForSale: Boolean
 });
-
+exports.ProductSchema = ProductSchema;
 const Product = mongoose.model('Product', ProductSchema);
 exports.queryAll = () => {
     return new Promise((resolve, reject) => {
@@ -60,4 +55,3 @@ exports.updateOne = (id, data) => {
         });
     })
 }
-// module.exports = Product;
