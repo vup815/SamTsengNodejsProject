@@ -3,7 +3,6 @@ const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 const redis = require('redis');
-
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb://localhost/nodeJsProject_shopping';
 const session = require('express-session');
@@ -17,7 +16,7 @@ const redisClient = redis.createClient();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -30,7 +29,9 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
-
+// app.use('/', (req, res) => {
+//   res.render('member/login', {characters: ['Cloud', 'Aerith', 'Tifa', 'Barret']});
+// });
 app.use('/products', productRouter);
 app.use('/members', memberRouter)
 app.use('/carts', cartRouter);

@@ -7,10 +7,7 @@ exports.register = (memberData) => {
             if (err) throw err;
             connection.query('INSERT INTO member_info SET ?', memberData, (err, rows) => {
                 connection.release();
-                if (err) {
-                    reject(err);
-                    return
-                }
+                if (err) reject (err);
                 resolve(rows);
             });
         });
@@ -22,10 +19,8 @@ exports.queryOne = (email) => {
         pool.getConnection((err, connection) => {
             if (err) throw err;
             connection.query('SELECT * FROM member_info WHERE email = ?', email, (err, result) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
+                connection.release();
+                if (err) reject(err);
                 resolve(result);
             });
         });

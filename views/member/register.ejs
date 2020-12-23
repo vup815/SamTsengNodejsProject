@@ -1,0 +1,73 @@
+<%- include('../head.ejs'); %>
+    <%- include('../header.ejs'); %>
+        <%- include('../errorModal.ejs'); %>
+
+            <body>
+
+                <section class="section-content padding-y">
+
+                    <div class="card mx-auto" style="max-width:520px; margin-top:40px;">
+                        <article class="card-body">
+                            <header class="mb-4">
+                                <h4 class="card-title w-25">註冊</h4>
+                            </header>
+                            <form action="/members/register" method="post" enctype="multipart/form-data">
+                                <div class="form-row">
+                                    <div class="col form-group">
+                                        <label>姓名</label>
+                                        <input type="text" class="form-control" name="name" value="" maxlength="10">
+                                    </div>
+                                    <div class="col form-group">
+
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col form-group">
+                                        <label>Email</label>
+                                        <input type="email" class="form-control" name="email" value="" maxlength="40">
+                                    </div>
+                                    <div class="col form-group">
+
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label>密碼</label>
+                                        <input class="form-control" type="password" name="password" value=""
+                                            maxlength="20">
+                                    </div>
+                                    <!-- <div class="form-group col-md-6">
+                                        <label class="btn btn-info form-control" style="margin-top:34px">
+                                            <input style="display:none" type="file" name="photo">
+                                            <i class="fa fa-photo"></i> 大頭貼
+                                        </label>
+                                    </div> -->
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary btn-block"> 註冊</button>
+                                </div>
+                                <div class="form-group">
+                                </div>
+                            </form>
+                        </article>
+                    </div>
+                    <p class="text-center mt-4">已經有帳號了嗎?<a href="/members/login">登入</a></p>
+                    <br><br>
+
+
+                </section>
+
+
+                <footer class="section-footer border-top padding-y">
+                    <div class="container">
+                        <p class="float-md-right">
+                            &copy Copyright 2019 All rights reserved
+                        </p>
+                        <p>
+                            <a href="#">Terms and conditions</a>
+                        </p>
+                    </div>
+                </footer>
+            </body>
+
+            </html>

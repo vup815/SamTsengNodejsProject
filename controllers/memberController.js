@@ -9,17 +9,18 @@ const productController = require('../controllers/productController');
 
 
 exports.postLogin = async function (req, res) {
+    console.log('login');
     const form = formidable();
-
-    form.parse(req, (err, fields) => {
+    form.parse(req, async (err, fields) => {
+        console.log('parse');
         if (err) throw err;
         const { error } = validation.validateMember(fields);
         if (error) return res.render('member/login', {error: error.details});
         Member.queryOne(fields.email)
             .then(r => {
                 const member = r[0];
-                if (r.length === 0) return res.render('member/login', { error: { err: { message: 'This account doesn\'t exist' } } });
-                if (member.password !== fields.password) return res.render('member/login', { error: { err: { message: 'Wrong password' } } });
+                if (r.length === 0) return res.render('member/login', { error: [{ message: 'This account doesn\'t exist' } ]});
+                if (member.password !== fields.password) return res.render('member/login', { error: [ { message: 'Wrong password' } ] });
                 req.session.user = {
                     name: member.name,
                     id: member.id
@@ -63,9 +64,14 @@ exports.postRegister = async function (req, res) {
     });
 }
 
+exports.logout = (req, res) => {
+    if (req.session) req.session.destroy();
+    productController.getAll(req, res);
+}
+
 exports.getRegister = (req, res) => {
-    res.render('member/register');
+    res.render('member/register',  {error:[]});
 }
 exports.getLogin = (req, res) => {
-    res.render('member/login');
+    res.render('member/login', {error:[]});
 }
