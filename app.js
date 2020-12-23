@@ -9,6 +9,7 @@ const session = require('express-session');
 const memberRouter = require('./routes/memberRoute');
 const productRouter = require('./routes/productRoute');
 const cartRouter = require('./routes/cartRoute');
+const indexRouter = require('./routes/index');
 const app = express();
 
 const RedisStore = require('connect-redis')(session);
@@ -30,10 +31,10 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
-app.use('/', productController.getAll);
 app.use('/products', productRouter);
 app.use('/members', memberRouter)
 app.use('/carts', cartRouter);
+app.use('/', indexRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
