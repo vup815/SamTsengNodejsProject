@@ -14,6 +14,7 @@ const app = express();
 const RedisStore = require('connect-redis')(session);
 const redisClient = redis.createClient();
 
+const productController = require('./controllers/productController');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -29,9 +30,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
-// app.use('/', (req, res) => {
-//   res.render('member/login', {characters: ['Cloud', 'Aerith', 'Tifa', 'Barret']});
-// });
+app.use('/', productController.getAll);
 app.use('/products', productRouter);
 app.use('/members', memberRouter)
 app.use('/carts', cartRouter);
