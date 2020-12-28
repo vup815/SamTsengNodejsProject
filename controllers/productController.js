@@ -6,8 +6,19 @@ const validation = require('../services/validation');
 const myUtil = require('../utils/util');
 
 exports.getAll = (req, res) => {
+    let {type} = req.params;
+    try {
+        Product.queryAll(type)
+            .then(r => res.render('product/all', { products: r}))
+            .catch(err => debug.debug(err.message));
+
+    } catch (e) {console.log(e)}
+}
+
+
+exports.adminAll = (req, res) => {
     Product.queryAll()
-        .then(r => res.render('product/all', { products: r }))
+        .then(r => res.render('product/adminAll', { products: r }))
         .catch(err => debug.debug(err.message));
 }
 
@@ -19,7 +30,7 @@ exports.getOne = async function (req, res) {
     Product.queryOne(id)
         .then(r => {
             if (!r) return res.status(404).send('Product not found !');
-            if (isUpdate) return res.render('product/update', { product: r });
+            if (isUpdate) return res.render('product/update', { product: r, error: []  });
             res.render('product/detail', { product: r });
         })
         .catch(err => debug.debug(err.message));
@@ -30,8 +41,7 @@ exports.createOne = function (req, res) {
     form.parse(req, async (err, fields, files) => {
         if (err) throw err;
         const { error } = validation.validateProduct(fields);
-        if (error) return res.render('product/create', { product: fields, error: error.details });
-
+        if (error) return res.render('product/new', { product: fields, error: error.details });
         try { fields.picture = await myUtil.toBase64(files.picture.path); }
         catch (e) { debug.debug(e.message); }
 
@@ -61,4 +71,11 @@ exports.updateOne = function (req, res) {
     });
 }
 
-
+exports.toggleOnSale = async function (req, res) {
+    const { id } = req.params;
+    let product = await Product.queryOne(id);
+    let onSale = (product.isForSale) ? false : true;
+    product.isForSale = onSale;
+    Product.updateOne(id, product);
+    res.send('ok');
+}

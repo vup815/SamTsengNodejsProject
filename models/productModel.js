@@ -23,18 +23,20 @@ const ProductSchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    picture:String,
+    picture: String,
     isForSale: Boolean
 });
 exports.ProductSchema = ProductSchema;
 const Product = mongoose.model('Product', ProductSchema);
-exports.queryAll = () => {
+exports.queryAll = (type) => {
     return new Promise((resolve, reject) => {
-        Product.find((err, res) => {
-            if (err) reject(err);
-            resolve(res);
-        })
-    })
+        Product.find()
+            .sort(type)
+            .exec((err, r) => {
+                if (err) reject (err);
+                resolve(r);
+            });
+    });
 }
 exports.queryOne = id => {
     return new Promise((resolve, reject) => {

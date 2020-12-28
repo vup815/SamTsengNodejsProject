@@ -1,0 +1,82 @@
+<%- include('../head.ejs'); %>
+    <%- include('../header.ejs'); %>
+
+        <body>
+            <style>
+                #order_master {
+                    box-sizing: border-box;
+                    box-shadow: 1px 1px 1px 2px #aaaaaa;
+                    border-radius: 5px;
+                }
+
+                #order_detail,
+                #total {
+                    box-sizing: border-box;
+                    border-radius: 5px;
+                }
+
+                .table th,
+                .table td {
+                    vertical-align: middle;
+                }
+            </style>
+            
+            <div class="container accordion mx-auto mt-5 pt-5" id="myContainer">
+                <h4>親愛的<span class="text-primary"><%= member.name %></span> 您好，請確認下列購物資訊是否正確</h4>
+                
+                <div class="w-100" id="order_master"><span class="pl-2">訂單編號：<span class="text-info"></span>
+                            <%= order._id %>
+                        </span></span></div>
+                
+                <div class="bg-info w-100 text-white mt-3" id="order_detail">
+                    <h3 class="py-2 ml-3">購物明細</h3>
+                </div>
+
+
+                <table class="table table-borderless table-shopping-cart">
+                    <thead class="text-muted">
+
+                        <tr class="text-uppercase">
+                            <th scope="col">商品名稱</th>
+                            <th scope="col" width="120">數量</th>
+                            <th scope="col" width="120">價格</th>
+                            <!-- <th scope="col" width="120">小計</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let i=0; i < order.orderDetail.length; i++) { 
+                            let detail = order.orderDetail[i];
+                            %>
+                            <tr>
+                                <td>
+                                    <figure class="itemside">
+                                        <div class="aside"><img src="data:image/png;base64, <%=detail.picture %>" class="img-sm"></div>
+                                        <figcaption class="info  d-flex flex-column ">
+                                            <div class="title text-dark my-auto"><%= detail.name %></div>
+                                        </figcaption>
+                                    </figure>
+                                </td>
+                                <td> <var class="my-auto qty"><%= detail.amount %></var></td>
+                                <td>
+                                    <div class="price-wrap ">
+                                        <var class="price"><%= detail.price %></var>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="price-wrap ">
+                                        <var class="amount"></var>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% } %>
+                    </tbody>
+                </table>
+                <div class="bg-dark w-100 text-white d-flex justify-content-end" id="total">
+                    <h4 class="py-2 ml-3">總金額 : NT$ </h4>
+                    <h4 class="py-2"><%= order.total %></h4>
+                    <h4 class="py-2 pr-3">元</h4>
+                </div>
+            </div>
+        </body>
+
+        </html>

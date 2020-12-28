@@ -13,7 +13,6 @@ function init() {
 	 		ajaxDeleteCart(productId);
 	 		//計算總額
 	 		getPrice();
-	 		getCartNum();
 		});
 	}
     function ajaxDeleteCart(productId) {
@@ -39,5 +38,29 @@ function init() {
 		total.innerText = totalPrice;
 	};
 	getPrice();
+
+
+	let order = document.getElementById('order');
+	order.addEventListener('click', () => {
+		let carts = [];
+		let productIds = document.getElementsByClassName('productId');
+		for (let i = 0; i < prices.length; i++) {
+			cart = {};
+			cart.id = productIds[i].innerText;
+			cart.amount = Number(quantities[i].value);
+			carts.push(cart);
+		}
+		sendOrder(JSON.stringify(carts));
+		window.setTimeout(()=> location.href='/orders', 300);
+	})
+
+	function sendOrder(carts) {
+		let xhr = new XMLHttpRequest();
+	
+		let url = '/orders';
+		xhr.open('post', url, true);
+		xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
+		xhr.send('carts='+carts);
+	}
 } 
 window.addEventListener('load', init);

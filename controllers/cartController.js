@@ -27,15 +27,6 @@ exports.getAll = async (req, res) => {
    
 }
 
-exports.ajaxGetAll = async (req, res) => {
-    if (!req.session.user) return;
-    const memberId = req.session.user.id;
-    try {
-        let cart = await Cart.queryAll(memberId);
-        let productId = cart.products.map(v => v._id);
-        res.send(productId);
-    } catch (e) { debug.debug(e.message); }
-}
 
 exports.deleteOne = async (req, res) => {
     if (!req.session.user) return memberController.getLogin(req, res);
@@ -46,5 +37,25 @@ exports.deleteOne = async (req, res) => {
             .then(r => res.json({result: r}));
     }
     catch (e) { debug.debug(e.message); }
+}
 
+exports.ajaxGetAll = async (req, res) => {
+    if (!req.session.user) return;
+    const memberId = req.session.user.id;
+    try {
+        let cart = await Cart.queryAll(memberId);
+        let productId = cart.products.map(v => v._id);
+        res.send(productId);
+    } catch (e) { debug.debug(e.message); }
+}
+
+exports.getCartNum = async (req, res) => {
+    if (!req.session.user) return;
+    const memberId = req.session.user.id;
+    try {
+        let cart = await Cart.queryAll(memberId);
+        let num = cart.products.length;
+        res.send(num.toString());
+    }
+    catch (e) { debug.debug(e.message); }
 }

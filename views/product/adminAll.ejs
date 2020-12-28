@@ -1,0 +1,110 @@
+<%- include('../head.ejs'); %>
+    <%- include('../header.ejs'); %>
+
+        <body>
+            <script src='/javascripts/adminAll.js'></script>
+            <style>
+                .table th,
+                .table td {
+                    vertical-align: middle;
+                }
+
+                tr:nth-child(even) {
+                    background: #e6f2ff
+                }
+
+                tr:nth-child(odd) {
+                    background: #bbe6ff
+                }
+
+                #myTr {
+                    background: #04233e;
+                    color: white;
+                }
+            </style>
+            <section class="section-content padding-y">
+
+                <div class="container mt-5">
+                    <table class="table table-borderless table-shopping-cart">
+                        <thead class="text-muted">
+
+                            <tr class="small text-uppercase" id="myTr">
+                                <th scope="col">商品</th>
+                                <th scope="col" width="120">數量</th>
+                                <th scope="col" width="120">價格</th>
+                                <th scope="col" width="120">出售中?</th>
+                                <th scope="col" class="text-center" width="200">上/下架</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for (let i=0; i < products.length; i++) { %>
+                                <tr>
+                                    <td>
+                                        <figure class="itemside">
+                                            <div class="aside"><img src="data:image/png;base64, <%=products[i].picture %>" class="img-sm">
+                                            </div>
+                                            <figcaption class="info d-flex flex-column ">
+                                                <div class="title text-dark my-auto"><%= products[i].name %></div>
+                                            </figcaption>
+                                        </figure>
+                                    </td>
+                                    <td> <var class="price my-auto">
+                                            <%= products[i].quantity %>
+                                        </var></td>
+                                    <td>
+                                        <div class="price-wrap ">
+                                            <var class="price">
+                                                <%= products[i].price %>
+                                            </var>
+                                        </div> 
+                                    </td>
+                                    <td>
+                                        <svg display="inline" width="2em" height="2em" viewBox="0 0 16 16"
+                                            class="bi bi-check2 check" fill="currentColor"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                                        </svg>
+                                        <svg display="none" width="2em" height="2em" viewBox="0 0 16 16"
+                                            class="bi bi-x cross" fill="currentColor"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z" />
+                                            <path fill-rule="evenodd"
+                                                d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z" />
+                                        </svg>
+                                    </td>
+                                    <td class="text-right myParent">
+                                        <p style="display:none" class="myStatus">
+                                            <%= products[i].isForSale %>
+                                        </p>
+                                        <button class="btn btn-light upDown" data-toggle="tooltip" productId="<%= products[i]._id %>">
+                                            <svg display="inline" width="1.5em" height="1.5em" viewBox="0 0 16 16"
+                                                class="bi bi-arrow-down down" fill="currentColor"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M4.646 9.646a.5.5 0 0 1 .708 0L8 12.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M8 2.5a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-1 0V3a.5.5 0 0 1 .5-.5z" />
+                                            </svg>
+                                            <svg display="none" width="1.5em" height="1.5em" viewBox="0 0 16 16"
+                                                class="bi bi-arrow-up up" fill="currentColor"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 3.5a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M7.646 2.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8 3.707 5.354 6.354a.5.5 0 1 1-.708-.708l3-3z" />
+                                            </svg>
+                                        </button>
+                                        <a href="/products/<%= products[i]._id %>?update=1" class="btn btn-light">修改</a>
+                                    </td>
+                                </tr>
+                                <% } %>
+                        </tbody>
+                    </table>
+
+                </div>
+            </section>
+        </body>
+
+        </html>

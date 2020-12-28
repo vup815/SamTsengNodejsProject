@@ -1,21 +1,21 @@
 const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const logger = require('morgan');
-const redis = require('redis');
-const mongoose = require('mongoose');
-const mongoDB = 'mongodb://localhost/nodeJsProject_shopping';
-const session = require('express-session');
-const memberRouter = require('./routes/memberRoute');
-const productRouter = require('./routes/productRoute');
-const cartRouter = require('./routes/cartRoute');
-const indexRouter = require('./routes/index');
-const app = express();
+          express = require('express'),
+             path = require('path'),
+           logger = require('morgan'),
+            redis = require('redis'),
+         mongoose = require('mongoose'),
+          session = require('express-session'),
+     memberRouter = require('./routes/memberRoute'),
+    productRouter = require('./routes/productRoute'),
+       cartRouter = require('./routes/cartRoute'),
+      orderRouter = require('./routes/orderRoute'),
+      indexRouter = require('./routes/index'),
+          mongoDB = 'mongodb://localhost/nodeJsProject_shopping',
+              app = express();
 
 const RedisStore = require('connect-redis')(session);
 const redisClient = redis.createClient();
 
-const productController = require('./controllers/productController');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -31,6 +31,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
+app.use('/orders', orderRouter);
 app.use('/products', productRouter);
 app.use('/members', memberRouter)
 app.use('/carts', cartRouter);

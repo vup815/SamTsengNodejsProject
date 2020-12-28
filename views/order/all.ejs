@@ -1,0 +1,152 @@
+<%- include('../head.ejs'); %>
+    <%- include('../header.ejs'); %>
+
+        <body>
+            <span id="status" style="display: none;"><%= status %></span>
+            <script src='/javascripts/order.js'></script>
+            <style>
+                .myBg {
+                background-color:#cce6ff;
+                }
+                .btn {
+                    padding-top:0;
+                    padding-bottom:0;
+                }
+                .myFlex  div {
+                 width:80px;
+                }
+                form {
+                margin-block-end:0;
+                }
+                </style>
+
+            <div class="container mt-5">
+                <h2>訂單管理</h2>
+            </div>
+            <nav class="navbar navbar-main  navbar-expand-lg navbar-light">
+                <div class="container">
+                    <div class="collapse navbar-collapse" id="main_nav2">
+                        <ul class="navbar-nav w-100 d-flex justify-content-around" id="myNav">
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link text-center" style="width:100%" href="/orders/all">全部</a>
+                                <!--           <hr color="blue"> -->
+                            </li>
+
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link text-center" href="/orders/ordered">待出貨</a>
+                            </li>
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link text-center" href="/orders/shipped">待收貨</a>
+                            </li>
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link text-center" href="/orders/finished">完成</a>
+                            </li>
+                            <li class="nav-item flex-fill">
+                                <a class="nav-link text-center" href="/orders/canceled">取消</a>
+                            </li>
+                        </ul>
+                    </div> <!-- collapse .// -->
+                </div> <!-- container .// -->
+            </nav>
+
+            <% for (let i=0; i < orders.length; i++) { let order=orders[i]; %>
+                <div class="accordion container mx-auto mt-2" id="accordionExample_<%= i %>">
+                    <div class="col-md-12">
+                        <div class="card" id="myCard">
+                            <div class="card-header d-flex justify-content-start myParent myBg align-items-center"
+                                id="headingOne_<%= i %>" data-toggle="collapse"
+                                data-target="#collapseOne_<%= i %>" aria-expanded="true"
+                                aria-controls="collapseOne_<%= i %>">
+                                <span style="display:inline" class="ml-3">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-up-fill"
+                                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                                    </svg>
+                                </span>
+                                <span style="display:none" class="ml-3">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-caret-down-fill"
+                                        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                    </svg>
+                                </span>
+                                <span class="col-3 text-center">訂單編號: <%= order._id %> </span><span class="col-2">
+                                  總金額：  <%= order.total %>
+                                </span><span>下訂時間 <%= order.orderDate%></span>
+
+                                <% if (order.status==='canceled' ) { %>
+                                    <span style="width:80px" class="text-center">已取消</span>
+                                    <% } %>
+
+                                        <% if (order.status==='ordered' ) { %>
+                                            <button class='btn btn-light myBtn' data-toggle="modal"
+                                                data-target="#orderModal" data-orderId="<%= order._id %>"
+                                                data-myTarget="">取消訂單</button>
+                                            <% } %>
+                                                <% if (order.status==='shipped' ) { %>
+                                                    <button class='btn btn-light myBtn' data-toggle="modal"
+                                                        data-target="#orderModal" data-order_no=""
+                                                        data-myTarget="">確認取貨</button>
+                                                    <% } %>
+
+                                                        <% if (order.status==='finished' ) { %>
+                                                            <form action="" method="post">
+                                                                <input type="hidden" name="action" value="buyAgain">
+                                                                <input type="hidden" name="orderId" value="">
+                                                                <button
+                                                                    class='btn btn-light buyAgain mt-2'>再買一次</button>
+                                                            </form>
+                                                            <% } %>
+                            </div>
+                            <div id="collapseOne_<%= i %>" class="collapse show"
+                                aria-labelledby="headingOne_<%= i %>"
+                                data-parent="#accordionExample_<%= i %>">
+
+                                <% for (let i=0; i < order.orderDetail.length; i++) { let detail=order.orderDetail[i];%>
+                                    <div class="w-100 d-flex justify-content-start align-items-center myFlex">
+
+                                        <div class="img-wrap mx-3"><img
+                                                src="data:image/png;base64, <%=detail.picture %>" class="border img-sm">
+                                        </div>
+                                        <div class="prod_name align-middle text-center" style="width:15%">
+                                            <%= detail.name %>
+                                        </div>
+                                        <div class="align-middle">
+                                            <div class="price-wrap">$ <%= detail.price %> <span
+                                                        class="price px-1"></span></div>
+                                        </div>
+
+                                        <div class="w-25 ml-5">
+                                            訂購數量 : <%= detail.amount %> <span class="price px-1"></span>
+                                        </div>
+
+                                    </div>
+                                    <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+                    <div class="modal fade" id="orderModal" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body d-flex justify-content-center">
+                                    <a type="button" class="btn btn-primary mr-5" id="confirm">確定</a>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                </div>
+                                <div class="modal-footer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        </body>
+
+        </html>

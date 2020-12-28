@@ -1,0 +1,84 @@
+<%- include('../head.ejs'); %>
+    <%- include('../header.ejs'); %>
+        <%- include('../errorModal.ejs'); %>
+
+            <body>
+                <style>
+                    #addPic,
+                    input[value="送出修改"] {
+                        margin: 10px;
+                        width: 90%;
+                        margin-left: 19px;
+                        color: white;
+                        background-color: #52a3ea;
+                        letter-spacing: 0.5rem;
+                        font-weight: 800;
+                    }
+
+                    label.btn {
+                        width: 90%;
+                        margin-top: 20px;
+                        letter-spacing: 0.5rem;
+                    }
+                </style>
+                <section class="section-content padding-y">
+                    <div class="container">
+
+                        <div class="row">
+                            <aside class="col-md-4 mt-5">
+                                <div class="card mx-auto" style="max-width: 380px;">
+                                    <div class="card-body">
+                                        <h4 class="card-title mb-4">修改商品</h4>
+                                        <form action="/products/update/<%= product._id %>" method="post"
+                                            enctype="multipart/form-data">
+                                            <label>名稱</label>
+                                            <div class="form-group">
+
+                                                <input type="text" class="form-control" name="name"
+                                                    value="<%= product.name %>" maxlength="20">
+                                            </div>
+                                            <label>價格</label>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" name="price"
+                                                    value="<%= product.price %>" maxlength="6">
+                                            </div>
+                                            <label>數量</label>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" name="quantity"
+                                                    value="<%= product.quantity %>" maxlength="3">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>圖片</label>
+                                                <input type="file" name="picture" id="myFile" />
+                                            </div>
+                                            <input type="submit" class="form-control" value="送出修改">
+                                        </form>
+                                    </div>
+                                </div>
+                            </aside>
+                            <main class="col-md-8 mt-5">
+
+
+                                <div class="row">
+
+
+                                    <div class="col-md-4 myPic">
+                                        <figure class="card card-product-grid">
+                                            <div class="img-wrap">
+                                                <img src="data:image/png;base64, <%=product.picture %>">
+                                            </div>
+                                        </figure>
+                                    </div>
+
+
+                                </div>
+
+                            </main>
+
+                        </div>
+
+                    </div>
+                </section>
+            </body>
+
+            </html>
