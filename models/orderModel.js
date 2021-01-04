@@ -16,7 +16,8 @@ const OrderSchema = new mongoose.Schema({
             name: String,
             price: Number,
             amount: Number,
-            picture: String
+            picture: String,
+            id: String
         })
     ]
 });
@@ -35,10 +36,30 @@ exports.getLatest = (memberId) => {
     });
 }
 
+exports.queryAll = (status) => {
+    return new Promise((resolve, reject) => {
+        if (status === 'all') {
+            Order.find()
+                .sort('-orderDate')
+                .exec((err, r) => {
+                    if (err) reject(err);
+                    resolve(r);
+                });
+        } else {
+            Order.find()
+                .where({ status: status })
+                .sort('-orderDate')
+                .exec((err, r) => {
+                    if (err) reject(err);
+                    resolve(r);
+                });
+        }
+    });
+}
 
 
 
-exports.queryAll = (memberId, status) => {
+exports.queryAllById = (memberId, status) => {
     return new Promise((resolve, reject) => {
         if (status === 'all') {
             Order.find({ buyer: memberId })
@@ -60,15 +81,13 @@ exports.queryAll = (memberId, status) => {
 }
 
 exports.createOne = (data) => {
-    // return new Promise((resolve, reject) => {
-    //     let order = new Order(data);
-    //     order.save(function (err, result) {
-    //         if (err) reject(err);
-    //         resolve(result);
-    //     })
-    // })
-    let order = new Order(data);
-    order.save();
+    return new Promise((resolve, reject) => {
+        let order = new Order(data);
+        order.save(function (err, result) {
+            if (err) reject(err);
+            resolve(result);
+        })
+    })
 }
 
 exports.changeStatus = async (orderId, status) => {
@@ -78,6 +97,15 @@ exports.changeStatus = async (orderId, status) => {
         order.save(function (err, result) {
             if (err) reject(err);
             resolve(result);
+        })
+    })
+}
+
+exports.queryOne = id => {
+    return new Promise((resolve, reject) => {
+        Order.findById(id, (err, res) => {
+            if (err) reject(err);
+            resolve(res);
         })
     })
 }

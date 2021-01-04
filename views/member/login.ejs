@@ -1,50 +1,51 @@
 <%- include('../head.ejs'); %>
-<%- include('../header.ejs'); %>
-<%- include('../errorModal.ejs'); %>
-<body>
+  <%- include('../errorModal.ejs'); %>
+    <%- include('../header_v2.ejs'); %>
 
-  <section class="section-conten padding-y mt-5 pt-5" style="min-height:84vh">
-    <div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
-      <div class="card-body">
-        <h4 class="card-title mb-4 w-25">登入</h4>
-        <form action="/members/login" method="post" enctype="multipart/form-data">
+      <body>
 
-          <div class="form-group">
-            <input name="email" class="form-control" placeholder="Email" type="text" maxlength="40">
-          </div> 
-          <div class="form-group">
-            <input name="password"  class="form-control" placeholder="Password" type="password" maxlength="20">
-          </div> 
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block">登入</button>
-          </div> 
-        </form>
-      </div> <!-- card-body.// -->
-    </div> <!-- card .// -->
+        <section class="section-conten padding-y mt-5 pt-5" style="min-height:84vh">
+          <div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
+            <div class="card-body">
+              <h4 class="card-title mb-4 w-25">登入</h4>
+              <form action="/members/login" method="post" enctype="multipart/form-data">
 
-    <p class="text-center mt-4">還沒有帳號? <a href="/members/register">註冊</a></p>
-    <br><br>
-    <!-- ============================ COMPONENT LOGIN  END.// ================================= -->
+                <div class="form-group">
+                  <input name="email" class="form-control" placeholder="Email" type="text" maxlength="40">
+                </div>
+                <div class="form-group">
+                  <input name="password" class="form-control" placeholder="Password" type="password" maxlength="20">
+                </div>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-primary btn-block">登入</button>
+                </div>
+              </form>
+            </div> <!-- card-body.// -->
+          </div> <!-- card .// -->
 
-
-  </section>
-  <!-- ========================= SECTION CONTENT END// ========================= -->
+          <p class="text-center mt-4">還沒有帳號? <a href="/members/register">註冊</a></p>
+          <br><br>
+          <!-- ============================ COMPONENT LOGIN  END.// ================================= -->
 
 
-  <!-- ========================= FOOTER ========================= -->
-  <footer class="section-footer border-top padding-y">
-    <div class="container">
-      <p class="float-md-right">
-        &copy Copyright 2020 All rights reserved
-      </p>
-      <p>
-        <a href="#">Terms and conditions</a>
-      </p>
-    </div><!-- //container -->
-  </footer>
-  <!-- ========================= FOOTER END // ========================= -->
+        </section>
+        <!-- ========================= SECTION CONTENT END// ========================= -->
 
 
-</body>
+        <!-- ========================= FOOTER ========================= -->
+        <footer class="section-footer border-top padding-y">
+          <div class="container">
+            <p class="float-md-right">
+              &copy Copyright 2020 All rights reserved
+            </p>
+            <p>
+              <a href="#">Terms and conditions</a>
+            </p>
+          </div><!-- //container -->
+        </footer>
+        <!-- ========================= FOOTER END // ========================= -->
 
-</html>
+
+      </body>
+
+      </html>

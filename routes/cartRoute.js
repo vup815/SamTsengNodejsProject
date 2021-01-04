@@ -7,6 +7,7 @@ router.get('/', cartController.getAll);
 router.get('/ajax', cartController.ajaxGetAll);
 router.get('/cartNum', cartController.getCartNum);
 router.post('/:id', cartController.addOne);
+router.post('/buyAgain/:orderId', cartController.buyAgain);
 router.delete('/:id', cartController.deleteOne);
 
 module.exports = router;

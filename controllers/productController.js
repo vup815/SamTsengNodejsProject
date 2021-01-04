@@ -6,13 +6,14 @@ const validation = require('../services/validation');
 const myUtil = require('../utils/util');
 
 exports.getAll = (req, res) => {
-    let {type} = req.params;
+    let member = req.session.user;
+    let { type } = req.params;
     try {
         Product.queryAll(type)
-            .then(r => res.render('product/all', { products: r}))
+            .then(r => res.render('product/all', { member: member, products: r }))
             .catch(err => debug.debug(err.message));
 
-    } catch (e) {console.log(e)}
+    } catch (e) { debug.debug(e.message); }
 }
 
 
@@ -23,6 +24,7 @@ exports.adminAll = (req, res) => {
 }
 
 exports.getOne = async function (req, res) {
+    let member = req.session.user;
     const { id } = req.params;
     const { error } = validation.validateId(id);
     if (error) return res.status(400).send('Bad request');
@@ -30,8 +32,8 @@ exports.getOne = async function (req, res) {
     Product.queryOne(id)
         .then(r => {
             if (!r) return res.status(404).send('Product not found !');
-            if (isUpdate) return res.render('product/update', { product: r, error: []  });
-            res.render('product/detail', { product: r });
+            if (isUpdate) return res.render('product/update', { product: r, error: [] });
+            res.render('product/detail', { member: member, product: r });
         })
         .catch(err => debug.debug(err.message));
 }
@@ -62,12 +64,14 @@ exports.updateOne = function (req, res) {
             fields._id = id;
             return res.render('product/update', { product: fields, error: error.details });
         }
-        try { fields.picture = await myUtil.toBase64(files.picture.path); }
-        catch (e) { debug.debug(e.message) }
-
+        if (files.picture.size > 0) {
+            try { fields.picture = await myUtil.toBase64(files.picture.path); }
+            catch (e) { debug.debug(e.message) }
+        }
         Product.updateOne(id, fields)
-            .then(r => res.render('product/detail', { product: r }))
-            .catch(err => debug.debug(err.message));
+            .then(
+                Product.queryAll().then(r => res.render('product/adminAll', { products: r }))
+            )
     });
 }
 

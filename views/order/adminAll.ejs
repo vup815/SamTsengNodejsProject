@@ -1,5 +1,5 @@
 <%- include('../head.ejs'); %>
-    <%- include('../header.ejs'); %>
+    <%- include('../header_v2.ejs'); %>
 
         <body>
             <span id="status" style="display: none;">
@@ -33,21 +33,21 @@
                     <div class="collapse navbar-collapse" id="main_nav2">
                         <ul class="navbar-nav w-100 d-flex justify-content-around" id="myNav">
                             <li class="nav-item flex-fill">
-                                <a class="nav-link text-center" style="width:100%" href="/orders/customer/all">全部</a>
+                                <a class="nav-link text-center" style="width:100%" href="/orders/admin/all">全部</a>
                                 <!--           <hr color="blue"> -->
                             </li>
 
                             <li class="nav-item flex-fill">
-                                <a class="nav-link text-center" href="/orders/customer/ordered">待出貨</a>
+                                <a class="nav-link text-center" href="/orders/admin/ordered">待出貨</a>
                             </li>
                             <li class="nav-item flex-fill">
-                                <a class="nav-link text-center" href="/orders/customer/shipped">待收貨</a>
+                                <a class="nav-link text-center" href="/orders/admin/shipped">待收貨</a>
                             </li>
                             <li class="nav-item flex-fill">
-                                <a class="nav-link text-center" href="/orders/customer/finished">完成</a>
+                                <a class="nav-link text-center" href="/orders/admin/finished">完成</a>
                             </li>
                             <li class="nav-item flex-fill">
-                                <a class="nav-link text-center" href="/orders/customer/canceled">取消</a>
+                                <a class="nav-link text-center" href="/orders/admin/canceled">取消</a>
                             </li>
                         </ul>
                     </div> <!-- collapse .// -->
@@ -78,28 +78,20 @@
                                 <span class="col-3 text-center">訂單編號: <%= order._id %> </span><span class="col-2">
                                     總金額： <%= order.total %>
                                 </span><span>下訂時間 <%= order.orderDate%></span>
-
+                                <span class="col-3 text-center">買家:<%= order.buyer%></span>
                                 <% if (order.status==='canceled' ) { %>
                                     <span style="width:80px" class="text-center">已取消</span>
                                     <% } %>
-
                                         <% if (order.status==='ordered' ) { %>
                                             <button class='btn btn-light myBtn' data-toggle="modal"
                                                 data-target="#orderModal" data-orderId="<%= order._id %>"
-                                                data-myTarget="">取消訂單</button>
+                                                data-myTarget="">出貨</button>
                                             <% } %>
                                                 <% if (order.status==='shipped' ) { %>
-                                                    <button class='btn btn-light myBtn' data-toggle="modal"
-                                                        data-target="#orderModal" data-orderId="<%= order._id %>"
-                                                        data-myTarget="">確認取貨</button>
+                                                    <span>待取貨</span>
                                                     <% } %>
-
                                                         <% if (order.status==='finished' ) { %>
-                                                            <form action="/carts/buyAgain/<%= order._id %>"
-                                                                method="post">
-                                                                <button
-                                                                    class='btn btn-light buyAgain mt-2'>再買一次</button>
-                                                            </form>
+                                                            <span>已完成</span>
                                                             <% } %>
                             </div>
                             <div id="collapseOne_<%= i %>" class="collapse show" aria-labelledby="headingOne_<%= i %>"

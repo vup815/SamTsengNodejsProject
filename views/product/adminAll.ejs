@@ -1,5 +1,5 @@
 <%- include('../head.ejs'); %>
-    <%- include('../header.ejs'); %>
+    <%- include('../header_v2.ejs'); %>
 
         <body>
             <script src='/javascripts/adminAll.js'></script>
@@ -23,8 +23,9 @@
                 }
             </style>
             <section class="section-content padding-y">
-
+                
                 <div class="container mt-5">
+                    <h2>管理員頁面</h2>
                     <table class="table table-borderless table-shopping-cart">
                         <thead class="text-muted">
 
@@ -41,10 +42,14 @@
                                 <tr>
                                     <td>
                                         <figure class="itemside">
-                                            <div class="aside"><img src="data:image/png;base64, <%=products[i].picture %>" class="img-sm">
+                                            <div class="aside"><img
+                                                    src="data:image/png;base64, <%=products[i].picture %>"
+                                                    class="img-sm">
                                             </div>
                                             <figcaption class="info d-flex flex-column ">
-                                                <div class="title text-dark my-auto"><%= products[i].name %></div>
+                                                <div class="title text-dark my-auto">
+                                                    <%= products[i].name %>
+                                                </div>
                                             </figcaption>
                                         </figure>
                                     </td>
@@ -56,7 +61,7 @@
                                             <var class="price">
                                                 <%= products[i].price %>
                                             </var>
-                                        </div> 
+                                        </div>
                                     </td>
                                     <td>
                                         <svg display="inline" width="2em" height="2em" viewBox="0 0 16 16"
@@ -78,7 +83,8 @@
                                         <p style="display:none" class="myStatus">
                                             <%= products[i].isForSale %>
                                         </p>
-                                        <button class="btn btn-light upDown" data-toggle="tooltip" productId="<%= products[i]._id %>">
+                                        <button class="btn btn-light upDown" data-toggle="tooltip"
+                                            productId="<%= products[i]._id %>">
                                             <svg display="inline" width="1.5em" height="1.5em" viewBox="0 0 16 16"
                                                 class="bi bi-arrow-down down" fill="currentColor"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -100,6 +106,14 @@
                                     </td>
                                 </tr>
                                 <% } %>
+                                    <tr class="d-flex justify-content-around">
+                                        <td>
+                                            <a href="/products/new/page">新增商品</a>
+                                        </td>
+                                        <td>
+                                            <a href="/orders/admin/all">管理訂單</a>
+                                        </td>
+                                    </tr>
                         </tbody>
                     </table>
 

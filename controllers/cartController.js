@@ -1,5 +1,6 @@
 const Product = require('../models/productModel');
 const Cart = require('../models/cartModel');
+const Order = require('../models/orderModel');
 const debug = require('debug');
 
 const memberController = require('../controllers/memberController');
@@ -11,20 +12,19 @@ exports.addOne = async (req, res) => {
     try {
         const product = await Product.queryOne(prodId);
         Cart.addOne(memberId, product)
-            .then(r => res.json({result: r}));
+            .then(r => res.json({ result: r }));
     }
     catch (e) { debug.debug(e.message); }
 }
 
 exports.getAll = async (req, res) => {
     if (!req.session.user) return memberController.getLogin(req, res);
-    const memberId = req.session.user.id;
-    
+    let member = req.session.user;
     try {
-        let cart = await Cart.queryAll(memberId);
-        res.render('cart/myCart', {products: cart.products});
-    } catch (e) {console.log(e)}
-   
+        let cart = await Cart.queryAll(member.id);
+        res.render('cart/myCart', { member: member, products: cart.products });
+    } catch (e) { debug.debug(e.message) }
+
 }
 
 
@@ -34,7 +34,7 @@ exports.deleteOne = async (req, res) => {
     const productId = req.params.id;
     try {
         Cart.deleteOne(memberId, productId)
-            .then(r => res.json({result: r}));
+            .then(r => res.json({ result: r }));
     }
     catch (e) { debug.debug(e.message); }
 }
@@ -59,3 +59,33 @@ exports.getCartNum = async (req, res) => {
     }
     catch (e) { debug.debug(e.message); }
 }
+
+exports.buyAgain = async (req, res) => {
+    const { orderId } = req.params;
+    let member = req.session.user;
+    let promises = [];
+    let order = await Order.queryOne(orderId);
+    let orderDetail = order.orderDetail;
+    for (let i = 0; i < orderDetail.length; i++) {
+        let promise = new Promise(resolve => {
+            Product.queryOne(orderDetail[i].id)
+                .then(r => resolve(r));
+        });
+        promises.push(promise);
+    }
+    Promise.all(promises)
+        .then(r => {
+            promises.length = 0;
+            for (let i = 0; i < r.length; i++) {
+                let product = r[i];
+                let promise = Cart.addOne(member.id, product);
+                promises.push(promise);
+            }
+        })
+        .catch(err => debug.debug(err.message));
+
+    Promise.all(promises)
+        .then(r => res.render('cart/myCart', { member: member, products: r }))
+        .catch(e => debug.debug(e.message));
+    }
+    

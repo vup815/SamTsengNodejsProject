@@ -28,6 +28,7 @@ const ProductSchema = new Schema({
 });
 exports.ProductSchema = ProductSchema;
 const Product = mongoose.model('Product', ProductSchema);
+
 exports.queryAll = (type) => {
     return new Promise((resolve, reject) => {
         Product.find()

@@ -33,10 +33,15 @@ function init() {
             let status = "";
             if (btnText === "確認取貨") {
                 status = "finished";
+                confirm.setAttribute('url', '/orders/customer/finished');
             }
             if (btnText === "取消訂單") {
                 status = "canceled";
-                confirm.setAttribute('url', '/orders/canceled');
+                confirm.setAttribute('url', '/orders/customer/canceled');
+            }
+            if (btnText === "出貨") {
+                status = "shipped";
+                confirm.setAttribute('url', '/orders/admin/shipped');
             }
             confirm.setAttribute("status", status);
             confirm.setAttribute('orderId', orderId);
@@ -64,7 +69,7 @@ function init() {
     var navs = navBar.children;
     var hr = document.createElement("hr");
     hr.classList.add("text-primary");
-    var status = document.getElementById("status").textContent;
+    var status = document.getElementById("status").textContent.trim();
     var index = 0;
     switch (status) {
         case "all":

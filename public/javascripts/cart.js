@@ -1,26 +1,27 @@
 function init() {
-    var prices = document.getElementsByClassName("price");
-    var total = document.getElementById("total");
-    var quantities = document.getElementsByClassName("quantity");
-    var amounts = document.getElementsByClassName("amount");
+	var prices = document.getElementsByClassName("price");
+	var total = document.getElementById("total");
+	var quantities = document.getElementsByClassName("quantity");
+	var amounts = document.getElementsByClassName("amount");
 	//刪除按鈕
 	var deleteButton = document.getElementsByClassName("deleteButton");
 	for (let i = 0; i < deleteButton.length; i++) {
-		deleteButton[i].addEventListener("click", function(e) {
-            let productId = this.getAttribute('productId');
-    		//移除tr
+		deleteButton[i].addEventListener("click", function (e) {
+			let productId = this.getAttribute('productId');
+			//移除tr
 			e.target.closest(".productItems").remove();
-	 		ajaxDeleteCart(productId);
-	 		//計算總額
-	 		getPrice();
+			ajaxDeleteCart(productId);
+			//計算總額
+			getPrice();
+			getCartNum();
 		});
 	}
-    function ajaxDeleteCart(productId) {
-        var xhr = new XMLHttpRequest();
-        var url = `/carts/${productId}`;
-        xhr.open('delete', url, true);
-        xhr.send();
-    }
+	function ajaxDeleteCart(productId) {
+		var xhr = new XMLHttpRequest();
+		var url = `/carts/${productId}`;
+		xhr.open('delete', url, true);
+		xhr.send();
+	}
 
 	//改變數量就更新總額
 	for (let i = 0; i < quantities.length; i++) {
@@ -29,11 +30,11 @@ function init() {
 
 	function getPrice() {
 		let totalPrice = 0;
-		for (let i = 0; i <quantities.length; i++) {
+		for (let i = 0; i < quantities.length; i++) {
 			var qty = Number(quantities[i].value);
 			var price = Number(prices[i].innerText);
 			amounts[i].innerText = qty * price;
-			totalPrice += (qty*price);
+			totalPrice += (qty * price);
 		}
 		total.innerText = totalPrice;
 	};
@@ -51,16 +52,31 @@ function init() {
 			carts.push(cart);
 		}
 		sendOrder(JSON.stringify(carts));
-		window.setTimeout(()=> location.href='/orders', 300);
+		window.setTimeout(() => location.href = '/orders', 300);
 	})
 
 	function sendOrder(carts) {
 		let xhr = new XMLHttpRequest();
-	
+
 		let url = '/orders';
 		xhr.open('post', url, true);
 		xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
-		xhr.send('carts='+carts);
+		xhr.send('carts=' + carts);
 	}
-} 
+
+	let cartNum = document.getElementById("shopping_cart_num");
+
+	let getCartNum = function () {
+		let xhr = new XMLHttpRequest();
+		xhr.onload = function () {
+			if (xhr.status == 200) {
+				cartNum.innerHTML = xhr.responseText;
+			}
+		}
+		let url = '/carts/cartNum';
+		xhr.open('get', url, true);
+		xhr.send();
+	};
+	getCartNum();
+}
 window.addEventListener('load', init);
