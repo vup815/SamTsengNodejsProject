@@ -21,7 +21,7 @@ const productSchema = Joi.object({
 const idSchema = Joi.string().length(24).hex();
 
 const memberSchema = Joi.object({
-    name: Joi.string(),
+    name: Joi.string().alphanum(),
     email: Joi.string().email().required(),
     password: Joi.string().pattern(/^[a-z0-9A-Z]{8,20}$/).required(),
     r_password: Joi.ref('password')

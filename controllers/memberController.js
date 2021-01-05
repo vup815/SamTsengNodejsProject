@@ -1,6 +1,6 @@
 const formidable = require('formidable');
+const request = require('request-promise');
 const debug = require('debug');
-
 const Member = require('../models/memberModel');
 const validation = require('../services/validation');
 const myUtil = require('../utils/util');
@@ -32,32 +32,51 @@ exports.postLogin = async function (req, res) {
 }
 
 exports.postRegister = async function (req, res) {
-    const form = formidable();
-    form.parse(req, async (err, fields) => {
-        if (err) throw err;
-        const { error } = validation.validateMember(fields);
-        if (error) return res.render('member/register', { error: error.details });
+    let body = req.body;
+    const { error } = validation.validateMember(body);
+    if (error) return res.render('member/register', { error: error.details });
 
-        const memberData = {
-            name: fields.name,
-            email: fields.email,
-            password: fields.password,
-            create_date: myUtil.onTime()
-        }
-        let isExist = false;
-        await Member.queryOne(memberData.email)
-            .then(r => {
-                if (r.length > 0) {
-                    res.render('member/register', { error: { err: { message: 'This email has been registered' } } });
-                    isExist = true;
-                }
-            });
-        if (!isExist) {
-            Member.register(memberData)
-                .then(r => res.render('member/login')
-                    , err => debug.debug(err.message));
-        }
-    });
+    let isExist = false;
+    await Member.queryOne(body.email)
+        .then(r => {
+            if (r.length > 0) {
+                isExist = true;
+                res.render('member/register', { error: [{ message: 'This email has been registered' }] });
+            }
+        });
+
+    let memberData = {
+        name: body.name,
+        email: body.email,
+        password: body.password,
+        create_date: myUtil.onTime()
+    };
+
+    let file = req.file;
+    if (file && file.size > 0) {
+        let encodedImage = file.buffer.toString('base64');
+        options = {
+            'method': 'POST',
+            'url': 'https://api.imgur.com/3/image',
+            'headers': {
+                'Authorization': 'Client-ID 76d2aaac43c004a'
+            },
+            formData: {
+                'image': encodedImage
+            }
+        };
+        await request(options, function (error, response) {
+            if (error) throw new Error(error);
+            let link = JSON.parse(response.body).data.link;
+            memberData.img = link;
+        });
+    }
+
+    if (!isExist) {
+        Member.register(memberData)
+            .then(() => res.render('member/login', { error: [] })
+                , err => debug.debug(err.message));
+    }
 }
 
 exports.logout = (req, res) => {
@@ -69,5 +88,26 @@ exports.getRegister = (req, res) => {
     res.render('member/register', { error: [] });
 }
 exports.getLogin = (req, res) => {
-    res.render('member/login', { error: []});
+    res.render('member/login', { error: [] });
+}
+
+async function uploadImg(buffer) {
+    let encodedImage = buffer.toString('base64');
+    options = {
+        'method': 'POST',
+        'url': 'https://api.imgur.com/3/image',
+        'headers': {
+            'Authorization': 'Client-ID 76d2aaac43c004a'
+        },
+        formData: {
+            'image': encodedImage
+        }
+    };
+    return new Promise(resolve => {
+        request(options, function (error, response) {
+            if (error) throw new Error(error);
+            let link = JSON.parse(response.body).data.link;
+            resolve(link);
+        });
+    })
 }
