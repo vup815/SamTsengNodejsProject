@@ -1,10 +1,12 @@
 const formidable = require('formidable');
-const request = require('request-promise');
 const debug = require('debug');
+const axios = require('axios');
+const FormData = require('form-data');
+
+
 const Member = require('../models/memberModel');
 const validation = require('../services/validation');
 const myUtil = require('../utils/util');
-
 const productController = require('../controllers/productController');
 
 
@@ -55,21 +57,21 @@ exports.postRegister = async function (req, res) {
     let file = req.file;
     if (file && file.size > 0) {
         let encodedImage = file.buffer.toString('base64');
-        options = {
-            'method': 'POST',
-            'url': 'https://api.imgur.com/3/image',
-            'headers': {
-                'Authorization': 'Client-ID 76d2aaac43c004a'
+        let data = new FormData();
+        data.append('image', encodedImage);
+
+        var config = {
+            method: 'post',
+            url: 'https://api.imgur.com/3/image',
+            headers: {
+                'Authorization': 'Client-ID 76d2aaac43c004a',
+                ...data.getHeaders()
             },
-            formData: {
-                'image': encodedImage
-            }
+            data: data
         };
-        await request(options, function (error, response) {
-            if (error) throw new Error(error);
-            let link = JSON.parse(response.body).data.link;
-            memberData.img = link;
-        });
+        await axios(config)
+            .then(r => memberData.img = r.data.data.link)
+            .catch(e => console.log(e));
     }
 
     if (!isExist) {
