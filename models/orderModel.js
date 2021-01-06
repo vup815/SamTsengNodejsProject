@@ -24,7 +24,7 @@ const OrderSchema = new mongoose.Schema({
 
 const Order = mongoose.model('Order', OrderSchema);
 
-exports.getLatest = (memberId) => {
+exports.getLatest = memberId => {
     return new Promise((resolve, reject) => {
         Order.find({ buyer: memberId })
             .sort('-orderDate')
@@ -36,7 +36,7 @@ exports.getLatest = (memberId) => {
     });
 }
 
-exports.queryAll = (status) => {
+exports.queryAll = status => {
     return new Promise((resolve, reject) => {
         if (status === 'all') {
             Order.find()
@@ -83,21 +83,21 @@ exports.queryAllById = (memberId, status) => {
 exports.createOne = (data) => {
     return new Promise((resolve, reject) => {
         let order = new Order(data);
-        order.save(function (err, result) {
+        order.save((err, result) => {
             if (err) reject(err);
             resolve(result);
-        })
-    })
+        });
+    });
 }
 
 exports.changeStatus = async (orderId, status) => {
     let order = await Order.findById(orderId);
     order.status = status;
     return new Promise((resolve, reject) => {
-        order.save(function (err, result) {
+        order.save((err, result) => {
             if (err) reject(err);
             resolve(result);
-        })
+        });
     })
 }
 
