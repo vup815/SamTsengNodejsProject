@@ -13,12 +13,14 @@ function init() {
 			ajaxDeleteCart(productId);
 			//計算總額
 			getPrice();
-			getCartNum();
 		});
 	}
 	function ajaxDeleteCart(productId) {
 		var xhr = new XMLHttpRequest();
 		var url = `/carts/${productId}`;
+		xhr.onload = () => {
+            if (xhr.status === 200) getCartNum();
+        }
 		xhr.open('delete', url, true);
 		xhr.send();
 	}

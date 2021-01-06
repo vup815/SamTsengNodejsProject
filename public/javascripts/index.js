@@ -7,7 +7,6 @@ function init() {
             this.children[1].setAttribute('display', 'inline');
             let productId = this.getAttribute('productId');
             addToCart(productId);
-            
         })
     }
     function addToCart(productId) {

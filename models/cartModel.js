@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { ProductSchema } = require('./productModel');
-const debug = require('debug');
 
 const CartSchema = new mongoose.Schema({
     products: {
@@ -11,18 +10,18 @@ const CartSchema = new mongoose.Schema({
 
 const Cart = mongoose.model('Cart', CartSchema);
 
-exports.queryAll = async (memberId) => {
-    let cart = await Cart.findOne({ buyer: memberId }, (err, res) => {
-        if (err) throw err;
-        return res;
+exports.queryAll = memberId => {
+    return new Promise((resolve, reject) => {
+        Cart.findOne({buyer: memberId}, (err, res) => {
+            if (err) reject(err);
+            resolve(res);
+        });
     });
-    if (!cart) cart = new Cart({ products: [], buyer: memberId });
-    return cart;
 }
 
 exports.addOne = async (memberId, product) => {
     let cart = await Cart.findOne({ buyer: memberId }, (err, res) => {
-        if (err) throw err;
+        if (err) throw new Error(err.message);
         return res;
     });
 
@@ -39,7 +38,7 @@ exports.addOne = async (memberId, product) => {
 
 exports.deleteOne = async (memberId, productId) => {
     let cart = await Cart.findOne({ buyer: memberId }, (err, res) => {
-        if (err) throw err;
+        if (err) throw new Error(err.message);
         return res;
     });
     cart.products.id(productId).remove();
@@ -51,8 +50,8 @@ exports.deleteOne = async (memberId, productId) => {
     })
 }
 
-exports.deleteAll = (memberId) => {
+exports.deleteAll = memberId => {
     Cart.findOneAndRemove({ buyer: memberId }, (err) => {
-        if (err) console.log(err);
+        throw new Error(err.message);
     })
 }
