@@ -1,19 +1,17 @@
 const Joi = require('joi');
 
-exports.validateProduct = (product) => {
+function validateProduct(product) {
     return productSchema.validate(product, { abortEarly: false });
 }
-exports.validateId = (id) => {
+function validateId(id) {
     return idSchema.validate(id);
 }
-exports.validateMember = (member) => {
+function validateMember(member) {
     return memberSchema.validate(member, { abortEarly: false });
 }
 
-
-
 const productSchema = Joi.object({
-    name: Joi.string().min(3).max(30).alphanum().required(),
+    name: Joi.string().min(3).max(30).required(),
     price: Joi.number().min(1).max(99999).required(),
     quantity: Joi.number().min(1).max(999).required()
 });
@@ -26,3 +24,5 @@ const memberSchema = Joi.object({
     password: Joi.string().pattern(/^[a-z0-9A-Z]{8,20}$/).required(),
     r_password: Joi.ref('password')
 });
+
+module.exports = { validateProduct, validateMember, validateId };

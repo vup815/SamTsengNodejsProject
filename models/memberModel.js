@@ -1,27 +1,26 @@
 const pool = require('../db/mysqlCon');
 
-
-exports.register = (memberData) => {
+exports.register = memberData => {
     return new Promise((resolve, reject) => {
         pool.getConnection((err, connection) => {
-            if (err) throw err;
+            if (err) throw new Error(err.message);
             connection.query('INSERT INTO member_info SET ?', memberData, (err, rows) => {
                 connection.release();
-                if (err) reject (err);
+                if (err) reject(err);
                 resolve(rows);
             });
         });
     });
 }
 
-exports.queryOne = (email) => {
+exports.queryOne = email => {
     return new Promise((resolve, reject) => {
         pool.getConnection((err, connection) => {
-            if (err) throw err;
-            connection.query('SELECT * FROM member_info WHERE email = ?', email, (err, result) => {
+            if (err) throw new Error(err.message);
+            connection.query('SELECT * FROM member_info WHERE email = ?', email, (err, rows) => {
                 connection.release();
                 if (err) reject(err);
-                resolve(result);
+                resolve(rows);
             });
         });
     });

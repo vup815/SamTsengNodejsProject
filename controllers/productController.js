@@ -1,85 +1,119 @@
-const formidable = require('formidable');
-const debug = require('debug');
 
 const Product = require('../models/productModel');
-const validation = require('../services/validation');
-const myUtil = require('../utils/util');
+const { validateProduct, validateId } = require('../services/validation');
 
 exports.getAll = (req, res) => {
-    let member = req.session.user;
-    let { type } = req.params;
     try {
+        let member = req.session.user;
+        let { type } = req.params;
         Product.queryAll(type)
             .then(r => res.render('product/all', { member: member, products: r }))
-            .catch(err => debug.debug(err.message));
-
-    } catch (e) { debug.debug(e.message); }
+            .catch(e => { throw new Error(e.message) });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err.message);
+    }
 }
 
 
 exports.adminAll = (req, res) => {
-    Product.queryAll()
-        .then(r => res.render('product/adminAll', { products: r }))
-        .catch(err => debug.debug(err.message));
+    try {
+        Product.queryAll()
+            .then(r => res.render('product/adminAll', { products: r }))
+            .catch(e => { throw new Error(e.message) });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err.message);
+    }
 }
 
 exports.getOne = async function (req, res) {
-    let member = req.session.user;
-    const { id } = req.params;
-    const { error } = validation.validateId(id);
-    if (error) return res.status(400).send('Bad request');
-    const isUpdate = (req.query.update === '1') ? true : false
-    Product.queryOne(id)
-        .then(r => {
-            if (!r) return res.status(404).send('Product not found !');
-            if (isUpdate) return res.render('product/update', { product: r, error: [] });
-            res.render('product/detail', { member: member, product: r });
-        })
-        .catch(err => debug.debug(err.message));
+    try {
+        let member = req.session.user;
+        const { id } = req.params;
+        const { error } = validateId(id);
+        if (error) return res.status(400).send('Bad request');
+        const isUpdate = (req.query.update === '1') ? true : false
+        Product.queryOne(id)
+            .then(r => {
+                if (!r) return res.status(404).send('Product not found !');
+                if (isUpdate) return res.render('product/update', { product: r, error: [] });
+                res.render('product/detail', { member: member, product: r });
+            })
+            .catch(e => { throw new Error(e.message) });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err.message);
+    }
 }
 
 exports.createOne = function (req, res) {
-    const form = formidable();
-    form.parse(req, async (err, fields, files) => {
-        if (err) throw err;
-        const { error } = validation.validateProduct(fields);
-        if (error) return res.render('product/new', { product: fields, error: error.details });
-        try { fields.picture = await myUtil.toBase64(files.picture.path); }
-        catch (e) { debug.debug(e.message); }
+    try {
+        let body = req.body;
+        const { error } = validateProduct(body);
+        if (error) return res.render('product/new', { product: body, error: error.details });
 
-        fields.isForSale = true;
-        Product.createOne(fields)
-            .then(r => res.render('product/detail', { product: r }))
-            .catch(err => debug.debug(err.message));
-    });
+        let productData = {
+            name: body.name,
+            price: body.price,
+            quantity: body.quantity,
+            isForSale: true
+        }
+        let file = req.file;
+        if (file && file.size > 0) {
+            productData.picture = file.buffer.toString('base64');
+        }
+        Product.createOne(productData)
+            .then(() => {
+                Product.queryAll().then(r => res.render('product/adminAll', { products: r }))
+            })
+            .catch(e => { throw new Error(e.message) });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err.message);
+    }
 }
 
 exports.updateOne = function (req, res) {
-    const form = formidable();
-    const { id } = req.params;
-    form.parse(req, async (err, fields, files) => {
-        if (err) throw err;
-        const { error } = validation.validateProduct(fields);
+    try {
+        const body = req.body;
+        const { id } = req.params;
+        const { error } = validateProduct(body);
         if (error) {
-            fields._id = id;
-            return res.render('product/update', { product: fields, error: error.details });
+            body._id = id;
+            return res.render('product/update', { product: body, error: error.details });
         }
-        if (files.picture.size > 0) {
-            try { fields.picture = await myUtil.toBase64(files.picture.path); }
-            catch (e) { debug.debug(e.message) }
+        let productData = {
+            name: body.name,
+            price: body.price,
+            quantity: body.quantity
         }
-        Product.updateOne(id, fields)
-            .then(
-                Product.queryAll().then(r => res.render('product/adminAll', { products: r }))
-            )
-    });
+        let file = req.file;
+        if (file && file.size > 0) {
+            productData.picture = file.buffer.toString('base64');
+        }
+        Product.updateOne(id, productData)
+            .then(Product.queryAll().then(r => res.render('product/adminAll', { products: r })))
+            .catch(e => { throw new Error(e.message) });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err.message);
+    }
 }
 
 exports.toggleOnSale = async function (req, res) {
-    const { id } = req.params;
-    let product = await Product.queryOne(id);
-    let onSale = (product.isForSale) ? false : true;
-    product.isForSale = onSale;
-    Product.updateOne(id, product);
-    res.send('ok');
+    try {
+        const { id } = req.params;
+        Product.queryOne(id)
+            .then(r => {
+                let onSale = (r.isForSale) ? false : true;
+                r.isForSale = onSale;
+                Product.updateOne(id, r);
+                res.status(200).send('success');
+            })
+            .catch(e => { throw new Error(e.message) });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err.message);
+    }
 }

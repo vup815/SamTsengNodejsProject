@@ -2,14 +2,14 @@ const axios = require('axios');
 const FormData = require('form-data');
 
 const Member = require('../models/memberModel');
-const validation = require('../services/validation');
+const { validateMember } = require('../services/validation');
 const myUtil = require('../utils/util');
 const productController = require('../controllers/productController');
 
 exports.postLogin = async function (req, res) {
     try {
         let body = req.body;
-        const { error } = validation.validateMember(body);
+        const { error } = validateMember(body);
         if (error) return res.render('member/login', { error: error.details });
         Member.queryOne(body.email)
             .then(r => {
@@ -29,7 +29,7 @@ exports.postLogin = async function (req, res) {
 exports.postRegister = async function (req, res) {
     try {
         let body = req.body;
-        const { error } = validation.validateMember(body);
+        const { error } = validateMember(body);
         if (error) return res.render('member/register', { error: error.details });
 
         let isExist = false;
