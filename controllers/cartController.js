@@ -60,6 +60,7 @@ exports.ajaxGetAll = (req, res) => {
         const memberId = req.session.user.id;
         Cart.queryAll(memberId)
             .then(r => {
+                if (!r) return;
                 let productId = r.products.map(v => v._id);
                 res.status(200).send(productId);
             })
@@ -77,6 +78,7 @@ exports.getCartNum = (req, res) => {
         const memberId = req.session.user.id;
         Cart.queryAll(memberId)
             .then(r => {
+                if (!r) return;
                 let num = r.products.length;
                 res.send(num.toString());
             })
