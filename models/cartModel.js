@@ -52,6 +52,6 @@ exports.deleteOne = async (memberId, productId) => {
 
 exports.deleteAll = memberId => {
     Cart.findOneAndRemove({ buyer: memberId }, (err) => {
-        throw new Error(err.message);
+        if (err) throw new Error(err.message);
     })
 }

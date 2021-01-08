@@ -1,6 +1,9 @@
+require('dotenv').config();
+
 const axios = require('axios');
 const FormData = require('form-data');
 const bcrypt = require('bcrypt');
+const jwt= require('jsonwebtoken');
 
 const Member = require('../models/memberModel');
 const { validateMember } = require('../services/validation');
@@ -8,6 +11,7 @@ const myUtil = require('../utils/util');
 const productController = require('../controllers/productController');
 
 exports.postLogin = async function (req, res) {
+     
     try {
         let body = req.body;
         const { error } = validateMember(body);
@@ -67,9 +71,9 @@ exports.postRegister = async function (req, res) {
             };
             promises.push(axios(config));
         }
-        let result = await Promise.all(promises)
-        memberData.password = result[0];
-        memberData.avatar = result[1].data.data.link;
+        let [password, avatarLink] = await Promise.all(promises)
+        memberData.password = password;
+        memberData.avatar = avatarLink.data.data.link;
         Member.register(memberData)
             .then(() => res.render('member/login', { error: [] }))
             .catch(e => { throw new Error(e.message) });

@@ -30,11 +30,11 @@ exports.adminAll = (req, res) => {
 exports.getOne = async function (req, res) {
     try {
         let member = req.session.user;
-        const { id } = req.params;
-        const { error } = validateId(id);
+        const { id: productId } = req.params;
+        const { error } = validateId(productId);
         if (error) return res.status(400).send('Bad request');
         const isUpdate = (req.query.update === '1') ? true : false
-        Product.queryOne(id)
+        Product.queryOne(productId)
             .then(r => {
                 if (!r) return res.status(404).send('Product not found !');
                 if (isUpdate) return res.render('product/update', { product: r, error: [] });
@@ -77,10 +77,10 @@ exports.createOne = function (req, res) {
 exports.updateOne = function (req, res) {
     try {
         const body = req.body;
-        const { id } = req.params;
+        const { id: productId } = req.params;
         const { error } = validateProduct(body);
         if (error) {
-            body._id = id;
+            body._id = productId;
             return res.render('product/update', { product: body, error: error.details });
         }
         let productData = {
@@ -92,7 +92,7 @@ exports.updateOne = function (req, res) {
         if (file && file.size > 0) {
             productData.picture = file.buffer.toString('base64');
         }
-        Product.updateOne(id, productData)
+        Product.updateOne(productId, productData)
             .then(Product.queryAll().then(r => res.render('product/adminAll', { products: r })))
             .catch(e => { throw new Error(e.message) });
     } catch (err) {
@@ -103,12 +103,12 @@ exports.updateOne = function (req, res) {
 
 exports.toggleOnSale = async function (req, res) {
     try {
-        const { id } = req.params;
-        Product.queryOne(id)
+        const { id: productId } = req.params;
+        Product.queryOne(productId)
             .then(r => {
                 let onSale = (r.isForSale) ? false : true;
                 r.isForSale = onSale;
-                Product.updateOne(id, r);
+                Product.updateOne(productId, r);
                 res.status(200).send('success');
             })
             .catch(e => { throw new Error(e.message) });
