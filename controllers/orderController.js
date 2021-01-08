@@ -4,14 +4,14 @@ const Cart = require('../models/cartModel');
 
 exports.getAll = (req, res) => {
     try {
-        let { type, status } = req.params;
+        let { role, status } = req.params;
         let member = req.session.user;
-        if (type === 'admin') {
+        if (role === 'admin') {
             Order.queryAll(status)
                 .then(r => res.render('order/adminAll', { orders: r, status: status }))
                 .catch(e => { throw new Error(e.message) });
         }
-        if (type === 'customer') {
+        if (role === 'customer') {
             Order.queryAllById(member.id, status)
                 .then(r => res.render('order/all', { member: member, orders: r, status: status }))
                 .catch(e => { throw new Error(e.message) });

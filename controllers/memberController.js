@@ -3,7 +3,6 @@ require('dotenv').config();
 const axios = require('axios');
 const FormData = require('form-data');
 const bcrypt = require('bcrypt');
-const jwt= require('jsonwebtoken');
 
 const Member = require('../models/memberModel');
 const { validateMember } = require('../services/validation');
