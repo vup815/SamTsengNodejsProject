@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 exports.onTime = () => {
     const date = new Date();
     const mm = date.getMonth() + 1;
@@ -15,14 +13,4 @@ exports.onTime = () => {
         (mi > 9 ? '' : '0') + mi, ":" +
         (ss > 9 ? '' : '0') + ss
     ].join('');
-}
-
-
-exports.toBase64 = function(path) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(path, 'base64', (err, result) => {
-            if (err) reject(err);
-            resolve(result);
-        });
-    });
 }
