@@ -53,6 +53,10 @@ function init() {
 			cart.amount = Number(quantities[i].value);
 			carts.push(cart);
 		}
+		if (carts.length === 0 ) {
+			alert('You have nothing in your shopping cart !');
+			location.reload();
+		}
 		sendOrder(JSON.stringify(carts));
 		window.setTimeout(() => location.href = '/orders', 300);
 	})
