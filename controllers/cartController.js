@@ -5,89 +5,59 @@ const Order = require('../models/orderModel');
 const memberController = require('../controllers/memberController');
 
 exports.addOne = (req, res) => {
-    try {
-        if (!req.session.user) return;
-        const memberId = req.session.user.id;
-        const productId = req.params.id;
-        Product.queryOne(productId)
-            .then(r => {
-                Cart.addOne(memberId, r)
-                    .then(() => res.status(200).send('success'));
-            })
-            .catch(e => { throw new Error(e.message) });
-    }
-    catch (err) {
-        console.log(err);
-        res.status(500).send(err.message);
-    }
+    if (!req.session.user) return;
+    const memberId = req.session.user.id;
+    const productId = req.params.id;
+    Product.queryOne(productId)
+        .then(r => {
+            Cart.addOne(memberId, r)
+                .then(() => res.status(200).send('success'));
+        })
+        .catch(e => { console.log(e) });
 }
 
 exports.getAll = (req, res) => {
-    try {
-        if (!req.session.user) return memberController.getLogin(req, res);
-        let member = req.session.user;
-        Cart.queryAll(member.id)
-            .then(r => {
-                if (!r) return res.render('cart/myCart', { member: member, products: [] });
-                res.render('cart/myCart', { member: member, products: r.products });
-            })
-            .catch(e => { throw new Error(e.message); });
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).send(err.message);
-    }
+    if (!req.session.user) return memberController.getLogin(req, res);
+    let member = req.session.user;
+    Cart.queryAll(member.id)
+        .then(r => {
+            if (!r) return res.render('cart/myCart', { member: member, products: [] });
+            res.render('cart/myCart', { member: member, products: r.products });
+        })
+        .catch(e => { console.log(e) });
 }
 
 exports.deleteOne = (req, res) => {
-    try {
-        if (!req.session.user) return;
-        const memberId = req.session.user.id;
-        const productId = req.params.id;
-        Cart.deleteOne(memberId, productId)
-            .then(r => res.status(200).send('success'))
-            .catch(e => { throw new Error(e.message) });
-    }
-    catch (err) {
-        console.log(err);
-        res.status(500).send(err.message);
-    }
+    if (!req.session.user) return;
+    const memberId = req.session.user.id;
+    const productId = req.params.id;
+    Cart.deleteOne(memberId, productId)
+        .then(r => res.status(200).send('success'))
+        .catch(e => { console.log(e) });
 }
 
 exports.ajaxGetAll = (req, res) => {
-    try {
-        if (!req.session.user) return;
-        const memberId = req.session.user.id;
-        Cart.queryAll(memberId)
-            .then(r => {
-                if (!r) return;
-                let productId = r.products.map(v => v._id);
-                res.status(200).send(productId);
-            })
-            .catch(e => { throw new Error(e.message) });
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).send(err.message);
-    }
+    if (!req.session.user) return;
+    const memberId = req.session.user.id;
+    Cart.queryAll(memberId)
+        .then(r => {
+            if (!r) return;
+            let productId = r.products.map(v => v._id);
+            res.status(200).send(productId);
+        })
+        .catch(e => { console.log(e) });
 }
 
 exports.getCartNum = (req, res) => {
-    try {
-        if (!req.session.user) return;
-        const memberId = req.session.user.id;
-        Cart.queryAll(memberId)
-            .then(r => {
-                if (!r) return;
-                let num = r.products.length;
-                res.send(num.toString());
-            })
-            .catch(e => { throw new Error(e.message) });
-    }
-    catch (err) {
-        console.log(err);
-        res.status(500).send(err.message);
-    }
+    if (!req.session.user) return;
+    const memberId = req.session.user.id;
+    Cart.queryAll(memberId)
+        .then(r => {
+            if (!r) return;
+            let num = r.products.length;
+            res.send(num.toString());
+        })
+        .catch(e => { console.log(e) });
 }
 
 exports.buyAgain = async (req, res) => {

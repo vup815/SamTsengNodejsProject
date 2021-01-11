@@ -51,7 +51,10 @@ exports.deleteOne = async (memberId, productId) => {
 }
 
 exports.deleteAll = memberId => {
-    Cart.findOneAndRemove({ buyer: memberId }, (err) => {
-        if (err) throw new Error(err.message);
+    return new Promise((resolve, reject) => {
+        Cart.findOneAndRemove({ buyer: memberId }, (err) => {
+            if (err) reject (err);
+            resolve('Success');
+        })
     })
 }
