@@ -43,22 +43,6 @@ function init() {
         xhr.send();
     }();
 
-    let cartNum = document.getElementById("shopping_cart_num");
-
-    let getCartNum = function() {
-        let xhr = new XMLHttpRequest();
-        xhr.onload = function() {
-            if (xhr.status == 200) {
-                cartNum.innerHTML = xhr.responseText;
-            }
-        }
-        let url = '/carts/cartNum';
-        xhr.open('get', url, true);
-        xhr.send();
-    };
-
-    getCartNum();
-
     // 分頁開始
         var tr = document.querySelectorAll(".card-product-list"); //抓取所有內容行 
         var num = tr.length; //表格所有行數 

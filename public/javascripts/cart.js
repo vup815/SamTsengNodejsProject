@@ -65,19 +65,5 @@ function init() {
 		xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded')
 		xhr.send('carts=' + carts);
 	}
-
-	let cartNum = document.getElementById("shopping_cart_num");
-
-	let getCartNum = function () {
-		let xhr = new XMLHttpRequest();
-		xhr.onload = function () {
-			if (xhr.status == 200) {
-				cartNum.innerHTML = xhr.responseText;
-			}
-		}
-		let url = '/carts/cartNum';
-		xhr.open('get', url, true);
-		xhr.send();
-	};
 }
 window.addEventListener('load', init);
