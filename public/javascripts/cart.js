@@ -79,6 +79,5 @@ function init() {
 		xhr.open('get', url, true);
 		xhr.send();
 	};
-	getCartNum();
 }
 window.addEventListener('load', init);

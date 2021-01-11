@@ -78,7 +78,7 @@
                                 <span class="col-3 text-center">訂單編號: <%= order._id %> </span><span class="col-2">
                                     總金額： <%= order.total %>
                                 </span><span>下訂時間 <%= order.orderDate%></span>
-                                <span class="col-3 text-center">買家:<%= order.buyer%></span>
+                                <span class="col-3 text-center">買家編號:<%= order.buyer%></span>
                                 <% if (order.status==='canceled' ) { %>
                                     <span style="width:80px" class="text-center">已取消</span>
                                     <% } %>
