@@ -56,6 +56,7 @@ function init() {
 		if (carts.length === 0 ) {
 			alert('You have nothing in your shopping cart !');
 			location.reload();
+			return;
 		}
 		sendOrder(JSON.stringify(carts));
 		window.setTimeout(() => location.href = '/orders', 300);
