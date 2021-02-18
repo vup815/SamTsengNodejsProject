@@ -7,7 +7,7 @@
         <section class="section-conten padding-y mt-5 pt-5" style="min-height:84vh">
           <div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
             <div class="card-body">
-              <h4 class="card-title mb-4 w-25">登入</h4>
+              <h4 class="card-title">請輸入登入資訊<span class='btn btn-primary quickLogin'>快速登入</span></h4>
               <form action="/members/login" method="post" enctype="multipart/form-data">
 
                 <div class="form-group">
@@ -44,6 +44,15 @@
           </div><!-- //container -->
         </footer>
         <!-- ========================= FOOTER END // ========================= -->
+        <script>
+          let btn = document.querySelector('.quickLogin')
+          let email = document.querySelector('input[name=email]');
+          let password = document.querySelector('input[name=password]');
+          btn.addEventListener('click', function(e){
+            email.value='Shima@gmail.com';
+            password.value='shima123';
+          });
+        </script>
 
 
       </body>
